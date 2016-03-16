@@ -60,4 +60,5 @@ http://testsite.dev/aa_ud/UD.php?COM=GET&KEY=myKey
 
 * Avoid loop with callbacks
 * Avoid code injection
-
+* Parametrical Callback
+* Automatically create tables, or better, file to instantiate tables.
