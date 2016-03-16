@@ -1,7 +1,6 @@
 <?php
 
-// --------------- CONFIGURATION
-
+// --------------- CONFIGURATION --- BEGIN
 $servername = "localhost";
 $username = "root";
 $password = "drupalpro";
@@ -9,6 +8,7 @@ $password = "drupalpro";
 $db_name = "testsite_dev";
 $db_table_ud = "tbl_ud";
 $db_table_cb = "tbl_cb";
+// --------------- CONFIGURATION --- END
 
 $conn = new mysqli($servername, $username, $password, $db_name);
 if ($conn->connect_error) {
@@ -35,6 +35,7 @@ if ($ud_com === 'GET') {
         }
     }
 }
+
 if ($ud_com === 'SET') {
     $sql = "INSERT INTO $db_table_ud (x_key, x_val) VALUES ('$ud_key', '$ud_val')";
     $result = $conn->query($sql);
@@ -61,7 +62,52 @@ if ($ud_com === 'SET') {
     }
 }
 
-///-{ Show the output.
-echo $output;
+if ($ud_com === 'CAL') {
+    $sql = "INSERT INTO $db_table_cb (x_key, x_cal) VALUES ('$ud_key', '$ud_val')";
+    $result = $conn->query($sql);
+    if ($result !== TRUE) {
+        $output .= "Error: " . $sql . "<br>" . $conn->error;
+    } else {
+        $output .= $ud_val;
+    }
+}
 
+if ($ud_com === 'INIT') {
+
+    $sql = "DROP TABLE IF EXISTS $db_table_ud";
+    $conn->query($sql);
+
+    $sql = "CREATE TABLE $db_table_ud (
+    id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+    x_key VARCHAR(100) NOT NULL DEFAULT '',
+    x_val VARCHAR(255) NOT NULL DEFAULT '',
+    x_dat TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+    )";
+
+    if ($conn->query($sql) === TRUE) {
+        echo "Table $db_table_ud created successfully.<br />";
+    } else {
+        echo "Error creating table: " . $conn->error;
+    }
+
+    $sql = "DROP TABLE IF EXISTS $db_table_cb";
+    $conn->query($sql);
+
+    $sql = "CREATE TABLE $db_table_cb (
+    id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+    x_key VARCHAR(100) NOT NULL DEFAULT '',
+    x_val VARCHAR(255) NOT NULL DEFAULT '',
+    x_dat TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+    )";
+
+    if ($conn->query($sql) === TRUE) {
+        echo "Table $db_table_cb created successfully.<br />";
+    } else {
+        echo "Error creating table: " . $conn->error;
+    }
+}
+
+
+///-{ Show the output and close the connection.
+echo $output;
 $conn->close();
