@@ -1,14 +1,6 @@
 <?php
 
-// --------------- CONFIGURATION --- BEGIN
-$servername = "localhost";
-$username = "root";
-$password = "drupalpro";
-
-$db_name = "testsite_dev";
-$db_table_ud = "tbl_ud";
-$db_table_cb = "tbl_cb";
-// --------------- CONFIGURATION --- END
+include_once 'settings.php';
 
 $conn = new mysqli($servername, $username, $password, $db_name);
 if ($conn->connect_error) {
@@ -21,6 +13,7 @@ if ($conn->connect_error) {
 $ud_com = filter_input(INPUT_GET, 'COM');
 $ud_key = filter_input(INPUT_GET, 'KEY');
 $ud_val = filter_input(INPUT_GET, 'VAL');
+$ud_tok = filter_input(INPUT_GET, 'TOK');   // API Token, for e.g., security
 $output = "";
 $sql = "";
 
@@ -37,7 +30,8 @@ if ($ud_com === 'GET') {
 }
 
 if ($ud_com === 'SET') {
-    $sql = "INSERT INTO $db_table_ud (x_key, x_val) VALUES ('$ud_key', '$ud_val')";
+    $ud_val_s = $conn->real_escape_string($ud_val);
+    $sql = "INSERT INTO $db_table_ud (x_key, x_val) VALUES ('$ud_key', '$ud_val_s')";
     $result = $conn->query($sql);
     if ($result !== TRUE) {
         $output .= "Error: " . $sql . "<br>" . $conn->error;
