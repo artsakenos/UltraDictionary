@@ -13,11 +13,24 @@ if ($conn->connect_error) {
 $ud_com = filter_input(INPUT_GET, 'COM');
 $ud_key = filter_input(INPUT_GET, 'KEY');
 $ud_val = filter_input(INPUT_GET, 'VAL');
-$ud_tok = filter_input(INPUT_GET, 'TOK');   // API Token, for e.g., security
+$ud_tok = filter_input(INPUT_GET, 'TOK');
 $output = "";
 $sql = "";
 
-///-{ Eseguiamo la query.
+// --------------- Check if Command was given, and Token is correct
+if (!isset($ud_com)) {
+    echo "UltraDictionary, no commands was given.";
+    $conn->close();
+    exit();
+}
+
+if (!empty($api_token) && $ud_tok !== $api_token) {
+    echo "Please send the correct API Token for this UltraDictionary instance.";
+    $conn->close();
+    exit();
+}
+
+
 if ($ud_com === 'GET') {
     // Prendiamo l'ultimo salvato se esiste
     $sql = "SELECT * FROM $db_table_ud WHERE x_key='$ud_key' ORDER BY id DESC LIMIT 1";
@@ -44,7 +57,7 @@ if ($ud_com === 'SET') {
     $result = $conn->query($sql);
     if ($result->num_rows > 0) {
         while ($row = $result->fetch_assoc()) {
-            $cb_url = $row["x_cal"];
+            $cb_url = $row["x_val"];
             $ch = curl_init();
             curl_setopt($ch, CURLOPT_URL, $cb_url);
             //curl_setopt($ch, CURLOPT_POST, 1);// set post data to true
@@ -57,7 +70,7 @@ if ($ud_com === 'SET') {
 }
 
 if ($ud_com === 'CAL') {
-    $sql = "INSERT INTO $db_table_cb (x_key, x_cal) VALUES ('$ud_key', '$ud_val')";
+    $sql = "INSERT INTO $db_table_cb (x_key, x_val) VALUES ('$ud_key', '$ud_val')";
     $result = $conn->query($sql);
     if ($result !== TRUE) {
         $output .= "Error: " . $sql . "<br>" . $conn->error;
@@ -66,7 +79,7 @@ if ($ud_com === 'CAL') {
     }
 }
 
-if ($ud_com === 'INIT') {
+if ($ud_com === 'INI') {
 
     $sql = "DROP TABLE IF EXISTS $db_table_ud";
     $conn->query($sql);
@@ -98,6 +111,26 @@ if ($ud_com === 'INIT') {
         echo "Table $db_table_cb created successfully.<br />";
     } else {
         echo "Error creating table: " . $conn->error;
+    }
+}
+
+if ($ud_com === 'LIS') {
+    $output = "Table UltraDictionary: $db_table_ud <br  />\n";
+    $sql = "SELECT * FROM $db_table_ud";
+    $result = $conn->query($sql);
+    if ($result->num_rows > 0) {
+        while ($row = $result->fetch_assoc()) {
+            $output .= "[" . $row['x_dat'] . "] " . $row['x_key'] . " := " . $row['x_val'] . "<br />\n";
+        }
+    }
+
+    $output .= "Table CallBacks: $db_table_cb <br  />\n";
+    $sql = "SELECT * FROM $db_table_cb";
+    $result = $conn->query($sql);
+    if ($result->num_rows > 0) {
+        while ($row = $result->fetch_assoc()) {
+            $output .= $row["x_val"] . "\n";
+        }
     }
 }
 

@@ -1,46 +1,61 @@
 # UltraDictionary
 
 UltraDictionary allows you to have your own key/value store server and 
-to perform some callback call if a key is set, 
+to perform some callback call when a key is set, 
 useful for implementing Cloud Messaging style applications. 
 Php + Mysqli is supported.
 
-Just copy the files on your server and follow the instructions.
+## Installation
+Download and copy the files e.g., in http://drupatest.dev/aa_ud/* or
 
-# Installation
+git clone https://github.com/artsakenos/UltraDictionary.git aa_ud
 
-Copy the file on your server, e.g., in http://drupatest.dev/aa_ud/*
+Configure the file settings.php of UltraDictionary, and you're done.
 
-## Create Tables on your db
+## Query Syntax
 
-Configure the file settings.php of UltraDictionary, 
-
-and call the INIT command:
-
-http://drupatest.dev/aa_ud/?COM=INIT
-
-
-## Perform Key Value Queries by http
-
+The query is a Command with some optional parameters:
 <pre>
-The query syntax is:
-Url:= url?COM=[command]&KEY=[key]&VAL=[val]
-Get a Value	GET key		Output: val
-Set a Value	SET key=val	Output: val
-Init DB         INIT            Output: successful state.
-Set a Callback  CAL key=val     Output: successful state.
+Url:= url?COM=[GET|SET|INI|CAL|LIS]&KEY=[key]&VAL=[value]&TOK=[token]
+</pre>
 
-Examples:
+The query parameters are:
+<pre>
+COM     The command, mandatory.
+    GET     GET a value given the KEY.
+            Output := the value.
+    SET     SET a value given the KEY and the VAL
+            Output := the value set.
+    INI     Setup the DBs
+            Output := the result of the operation.
+    CAL     SET a Callback for the KEY with VAL (the callback url)
+            Output := the result of the operation.
+    LIS     List all the variables and callbacks
+            Output := the list of all the variables.
+KEY     The Key
+VAL     The Value (or the callback in the callback command)
+TOK     The Token, mandatory if not left empty on the settings
 
+
+## Setup and Use Ultradictionary
+
+After the setup of all the variables in settings.php, call the INIT command:
+<pre>
+http://drupatest.dev/aa_ud/?COM=INIT
+</pre>
+
+## Perform Command Queries via http
+
+Some Examples:
+<pre>
 -- Set a myKey = myValue
 http://drupatest.dev/aa_ud/?COM=SET&KEY=myKey&VAL=myValue
 
 -- Get the value of myKey 
 http://drupatest.dev/aa_ud/?COM=GET&KEY=myKey
-
 </pre>
 
-# To Do
+## To Do
 
 * Avoid loop with callbacks
 * Avoid code injection
@@ -56,3 +71,5 @@ INSERT INTO tbl_ud (x_key, x_val) VALUES ('myKey', 'myValue')
 INSERT INTO tbl_cb (x_key, x_cal) VALUES ('myKey', 'http://drupatest.dev/aa_ud/?COM=SET&KEY=myKey&VAL=myValFromCallback');
 </pre>
 
+## Java Client
+The repository contains a Netbeans project for a Java client with an callback server.
