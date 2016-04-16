@@ -6,11 +6,11 @@ useful for implementing Cloud Messaging style applications.
 Php + Mysqli is supported.
 
 ## Installation
-Download and copy the files e.g., in http://drupatest.dev/aa_ud/* or
+Download and copy the files e.g., in `http://drupatest.dev/aa_ud/*` or
 
-git clone https://github.com/artsakenos/UltraDictionary.git aa_ud
+`git clone https://github.com/artsakenos/UltraDictionary.git aa_ud`
 
-Configure the file settings.php of UltraDictionary, and you're done.
+Configure the file _settings.php_ of _UltraDictionary_, and you're done.
 
 ## Query Syntax
 
@@ -35,11 +35,11 @@ COM     The command, mandatory.
 KEY     The Key
 VAL     The Value (or the callback in the callback command)
 TOK     The Token, mandatory if not left empty on the settings
-
+</pre>
 
 ## Setup and Use Ultradictionary
 
-After the setup of all the variables in settings.php, call the INIT command:
+After the setup of all the variables in `settings.php`, call the _INIT_ command:
 <pre>
 http://drupatest.dev/aa_ud/?COM=INIT
 </pre>
