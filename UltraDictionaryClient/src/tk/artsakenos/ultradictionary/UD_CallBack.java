@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package tk.artsakenos.ultradictionary.client;
+package tk.artsakenos.ultradictionary;
 
 import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
@@ -11,23 +11,30 @@ import com.sun.net.httpserver.HttpServer;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.net.InetSocketAddress;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  *
  * @author Andrea.Addis
  */
-public abstract class UD_LocalCallBack {
+public abstract class UD_CallBack {
 
     /**
      *
      * @param path The path where to dispatch the call, e.g., /ud_callback
      * @param port The server port
-     * @throws IOException
      */
-    public UD_LocalCallBack(String path, int port) throws IOException {
+    public UD_CallBack(String path, int port) {
         ///-{ Start a server for the callbacks
-        HttpServer server = HttpServer.create(new InetSocketAddress(port), 0);
-        server.createContext(path, new UD_LocalCallBack.MyHandler());
+        HttpServer server;
+        try {
+            server = HttpServer.create(new InetSocketAddress(port), 0);
+        } catch (IOException ex) {
+            Logger.getLogger(UD_CallBack.class.getName()).log(Level.SEVERE, null, ex);
+            return;
+        }
+        server.createContext(path, new UD_CallBack.MyHandler());
         server.setExecutor(null); // Creates a default executor
         server.start();
     }
@@ -35,6 +42,7 @@ public abstract class UD_LocalCallBack {
     private class MyHandler implements HttpHandler {
 
         @Override
+        @SuppressWarnings("ConvertToTryWithResources")
         public void handle(HttpExchange exchanger) throws IOException {
             // System.out.println("Request URI:" + t.getRequestURI());
             // String response = "This is the response";
