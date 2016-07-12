@@ -19,13 +19,13 @@ $sql = "";
 
 // --------------- Check if Command was given, and Token is correct
 if (!isset($ud_com)) {
-    echo "UltraDictionary, no commands was given.";
+    echo "ERROR. UltraDictionary, no commands was given.";
     $conn->close();
     exit();
 }
 
 if (!empty($api_token) && $ud_tok !== $api_token) {
-    echo "Please send the correct API Token for this UltraDictionary instance.";
+    echo "ERROR. Please send the correct API Token for this UltraDictionary instance.";
     $conn->close();
     exit();
 }
@@ -47,7 +47,7 @@ if ($ud_com === 'SET') {
     $sql = "INSERT INTO $db_table_ud (x_key, x_val) VALUES ('$ud_key', '$ud_val_s')";
     $result = $conn->query($sql);
     if ($result !== TRUE) {
-        $output .= "Error: " . $sql . "<br>" . $conn->error;
+        $output .= "ERROR. " . $sql . "<br>" . $conn->error;
     } else {
         $output .= $ud_val;
     }
@@ -73,7 +73,7 @@ if ($ud_com === 'CAL') {
     $sql = "INSERT INTO $db_table_cb (x_key, x_val) VALUES ('$ud_key', '$ud_val')";
     $result = $conn->query($sql);
     if ($result !== TRUE) {
-        $output .= "Error: " . $sql . "<br>" . $conn->error;
+        $output .= "ERROR. " . $sql . "<br>" . $conn->error;
     } else {
         $output .= $ud_val;
     }
@@ -94,7 +94,7 @@ if ($ud_com === 'INI') {
     if ($conn->query($sql) === TRUE) {
         echo "Table $db_table_ud created successfully.<br />";
     } else {
-        echo "Error creating table: " . $conn->error;
+        echo "ERROR. Cannot create table: " . $conn->error;
     }
 
     $sql = "DROP TABLE IF EXISTS $db_table_cb";
@@ -110,7 +110,7 @@ if ($ud_com === 'INI') {
     if ($conn->query($sql) === TRUE) {
         echo "Table $db_table_cb created successfully.<br />";
     } else {
-        echo "Error creating table: " . $conn->error;
+        echo "ERROR. Cannot create table: " . $conn->error;
     }
 }
 
@@ -133,7 +133,6 @@ if ($ud_com === 'LIS') {
         }
     }
 }
-
 
 ///-{ Show the output and close the connection.
 echo $output;

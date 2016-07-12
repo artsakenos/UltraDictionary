@@ -4,6 +4,7 @@ UltraDictionary allows you to have your own key/value store server and
 to perform some callback call when a key is set, 
 useful for implementing Cloud Messaging style applications. 
 Php + Mysqli is supported.
+The structure is super simple, intended for simple cloud test settings.
 
 ## Installation
 Download and copy the files e.g., in `http://drupatest.dev/aa_ud/*` or
@@ -57,9 +58,9 @@ http://drupatest.dev/aa_ud/?COM=GET&KEY=myKey
 
 ## To Do
 
-* Avoid loop with callbacks
-* Avoid code injection
+* Avoid loop with callbacks [to test]
 * Parametrical Callback
+* Prevent Code Injection
 
 ## Example queries from mysql
 
@@ -72,4 +73,4 @@ INSERT INTO tbl_cb (x_key, x_cal) VALUES ('myKey', 'http://drupatest.dev/aa_ud/?
 </pre>
 
 ## Java Client
-The repository contains a Netbeans project for a Java client with an callback server.
+The repository contains a NetBeans project for a Java client with an callback server.
