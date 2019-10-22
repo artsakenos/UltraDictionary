@@ -60,7 +60,7 @@ http://drupatest.dev/aa_ud/?COM=GET&KEY=myKey
 
 * Avoid loop with callbacks [to test]
 * Parametrical Callback
-* Prevent Code Injection
+* Security tests
 
 ## Example queries from mysql
 
